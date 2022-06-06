@@ -1,15 +1,17 @@
-package main
+package Network
+
+import "github.com/alan59a/a08/Tensor"
 
 type Network struct {
-	input  *Tensor
-	output *Tensor
-	target *Tensor
+	input  *Tensor.Tensor
+	output *Tensor.Tensor
+	target *Tensor.Tensor
 }
 
 type Graph struct {
-	variables []*Tensor
-	constants []*Tensor
-	updates   []*Tensor
+	variables []*Tensor.Tensor
+	constants []*Tensor.Tensor
+	updates   []*Tensor.Tensor
 	operator  []func()
 }
 

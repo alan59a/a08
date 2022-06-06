@@ -13,7 +13,6 @@ type Matrix struct {
 	id   uuid.UUID
 	name string
 	data [][]float64
-	raw  []float64
 	len  int
 	col  int
 	row  int

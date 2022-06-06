@@ -27,71 +27,56 @@ type Loc struct {
 // Sets an individual element of the Vector.
 // For user convenience, similar to python, negative location is also acceptable
 // Hold your horses. I know your proud Go-Vein is popping ... it's just for noobs ... you should NOT use it.
-func (m *Vector) Set(data float64, col, row int) {
+func (v *Vector) Set(data float64, i int) {
 
-	if col < 0 {
-		col = m.col + col
+	if i < 0 {
+		i = v.len + i
 	}
 
-	if row < 0 {
-		row = m.row + row
-	}
-
-	if col >= m.col || col < 0 || row >= m.row || row < 0 {
+	if i >= v.len || i < 0 {
 		log.Fatalln("Wrong location")
 	}
 
-	m.data[row][col] = data
+	v.data[i] = data
 }
 
 // Returns an individual element of the Vector
 // For user convenience, similar to python, negative location is also acceptable
 // Hold your horses. I know your proud Go-Vein is popping ... it's just for noobs ... you should NOT use it.
-func (m *Vector) Get(col, row int) float64 {
+func (v *Vector) Get(i int) float64 {
 
-	if col < 0 {
-		col = m.col + col
+	if i < 0 {
+		i = v.len + i
 	}
 
-	if row < 0 {
-		row = m.row + row
-	}
-
-	if col >= m.col || col < 0 || row >= m.row || row < 0 {
+	if i >= v.len || i < 0 {
 		log.Fatalln("Wrong location")
 	}
 
-	return m.data[row][col]
+	return v.data[i]
 }
 
 // Applies the structured function to all values within the Vector
 // # No matter how many variables the first one will be treated as input value and the rest as function parameters
 // # I was even nice enough to accept an error output for your function .... where else have you seen that?
-func (m *Vector) Apply(f func(...float64) (float64, error), vars ...float64) *Vector {
-	d := make([][]float64, m.row)
-
-	for a := range d {
-		d[a] = make([]float64, m.col)
-	}
-
-	v := make([]float64, len(vars)+1)
+func (v *Vector) Apply(f func(...float64) (float64, error), vars ...float64) *Vector {
+	d := make([]float64, v.len)
+	vv := make([]float64, len(vars)+1)
 
 	for a := range vars {
-		v[a+1] = vars[a]
+		vv[a+1] = vars[a]
 	}
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[a] {
-			v[0] = m.data[a][b]
-			c, err := f(v...)
+		vv[0] = v.data[a]
+		c, err := f(vv...)
 
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			d[a][b] = c
+		if err != nil {
+			log.Fatalln(err)
 		}
+
+		d[a] = c
 
 	}
 
@@ -99,46 +84,18 @@ func (m *Vector) Apply(f func(...float64) (float64, error), vars ...float64) *Ve
 		id:   uuid.New(),
 		name: "",
 		data: d,
-		len:  m.col * m.row,
-		col:  m.col,
-		row:  m.row,
+		len:  v.len,
 	}
-}
-
-// Returns the specified row
-func (m *Vector) Row(row int) []float64 {
-	d := make([]float64, m.col)
-
-	for a := range m.data[0] {
-		d[a] = m.data[row][a]
-	}
-
-	return d
-}
-
-// Returns the specified column
-func (m *Vector) Column(col int) []float64 {
-	d := make([]float64, m.row)
-
-	for a := range m.data {
-		d[a] = m.data[a][col]
-	}
-
-	return d
 }
 
 // Returns the Minimum value in the Vector
-func (m *Vector) Min() float64 {
-	min := m.data[0][0]
+func (v *Vector) Min() float64 {
+	min := v.data[0]
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[a] {
-
-			if min > m.data[a][b] {
-				min = m.data[a][b]
-			}
-
+		if min < v.data[a] {
+			min = v.data[a]
 		}
 
 	}
@@ -147,64 +104,51 @@ func (m *Vector) Min() float64 {
 }
 
 // Returns the Minimum value in the Vector and its location
-func (m *Vector) MinLoc() (float64, *Loc) {
-	min := m.data[0][0]
-	col := 0
-	row := 0
+func (v *Vector) MinLoc() (float64, *Loc) {
+	min := v.data[0]
+	i := 0
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[0] {
-
-			if min > m.data[a][b] {
-				min = m.data[a][b]
-				row = a
-				col = b
-			}
-
+		if min < v.data[a] {
+			min = v.data[a]
+			i = a
 		}
 
 	}
 
 	return min, &Loc{
-		Coord: []int{col, row},
+		Coord: []int{i},
 	}
 }
 
 // Returns the index of Minimum value in the Vector
-func (m *Vector) ArgMin() *Loc {
-	min := m.data[0][0]
-	col, row := 0, 0
+func (v *Vector) ArgMin() *Loc {
+	min := v.data[0]
+	i := 0
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[0] {
-			if min > m.data[a][b] {
-				min = m.data[a][b]
-				col = b
-				row = a
-			}
+		if min > v.data[a] {
+			min = v.data[a]
+			i = a
 		}
 
 	}
 
 	return &Loc{
-		Coord: []int{col, row},
+		Coord: []int{i},
 	}
 }
 
 // Returns the Maximum value in the Vector
-func (m *Vector) Max() float64 {
-	max := m.data[0][0]
+func (v *Vector) Max() float64 {
+	max := v.data[0]
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[0] {
-
-			if max < m.data[a][b] {
-				max = m.data[a][b]
-			}
-
+		if max < v.data[a] {
+			max = v.data[a]
 		}
 
 	}
@@ -213,213 +157,137 @@ func (m *Vector) Max() float64 {
 }
 
 // Returns the Maximum value in the Vector and its location
-func (m *Vector) MaxLoc() (float64, *Loc) {
-	max := m.data[0][0]
-	col := 0
-	row := 0
+func (v *Vector) MaxLoc() (float64, *Loc) {
+	max := v.data[0]
+	i := 0
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[0] {
-
-			if max < m.data[a][b] {
-				max = m.data[a][b]
-				col = b
-				row = a
-			}
-
+		if max < v.data[a] {
+			max = v.data[a]
+			i = a
 		}
 
 	}
 
 	return max, &Loc{
-		Coord: []int{col, row},
+		Coord: []int{i},
 	}
 }
 
 // Returns the index of Maximum value in the Vector
-func (m *Vector) ArgMax() *Loc {
-	max := m.data[0][0]
-	col, row := 0, 0
+func (v *Vector) ArgMax() *Loc {
+	max := v.data[0]
+	i := 0
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := range m.data[0] {
-			if max < m.data[a][b] {
-				max = m.data[a][b]
-				col = b
-				row = a
-			}
+		if max < v.data[a] {
+			max = v.data[a]
+			i = a
 		}
 
 	}
 
 	return &Loc{
-		Coord: []int{col, row},
+		Coord: []int{i},
 	}
 }
 
 // Returns the index of Soft Maximum value and its index in the Vector
-func (m *Vector) SoftMax() (*Vector, *Loc) {
-	st := m.Zero()
-	max := math.Exp(m.data[0][0])
-	st.data[0][0] = max
-	x, y := 0, 0
+func (v *Vector) SoftMax() (*Vector, *Loc) {
+	st := v.Zero()
+	max := math.Exp(v.data[0])
+	st.data[0] = max
+	i := 0
 	sum := max
 
-	for a := range m.data {
+	for a := range v.data {
 
-		for b := 1; b < m.col; b++ {
-			st.data[a][b] = math.Exp(m.data[a][b])
-			sum += st.data[a][b]
+		st.data[a] = math.Exp(v.data[a])
+		sum += st.data[a]
 
-			if max < st.data[a][b] {
-				max = st.data[a][b]
-				x = b
-				y = a
-			}
-
+		if max < st.data[a] {
+			max = st.data[a]
+			i = a
 		}
 
 	}
 
 	for a := range st.data {
-
-		for b := range st.data[0] {
-			st.data[a][b] /= sum
-		}
-
+		st.data[a] /= sum
 	}
 
 	return st, &Loc{
-		Coord: []int{x, y},
+		Coord: []int{i},
 	}
 }
 
 // Returns the Mean of values stored in Vector
-func (m *Vector) Mean() float64 {
+func (v *Vector) Mean() float64 {
 	sum := 0.0
 
-	for _, a := range m.data {
-
-		for _, b := range a {
-			sum += b
-		}
-
+	for _, a := range v.data {
+		sum += a
 	}
 
-	return sum / float64(m.len)
+	return sum / float64(v.len)
 }
 
 // Returns the Standard Deviation of values stored in Vector
-func (m *Vector) SD() float64 {
+func (v *Vector) SD() float64 {
 	sum := 0.0
 	va := 0.0
 
-	for _, a := range m.data {
-
-		for _, b := range a {
-			sum += b
-		}
-
+	for _, a := range v.data {
+		sum += a
 	}
 
-	mean := sum / float64(m.len)
+	mean := sum / float64(v.len)
 
-	for _, a := range m.data {
-
-		for _, b := range a {
-			va += math.Pow(mean-b, 2)
-		}
-
+	for _, a := range v.data {
+		va += math.Pow(mean-a, 2)
 	}
 
-	return math.Sqrt(va / float64(m.len))
+	return math.Sqrt(va / float64(v.len))
 }
 
 // Re-structures the dimensions of the data
 // Note: This is a forceful actions and excess data will be removed
-func (m *Vector) Reshape_(col, row int) {
+func (v *Vector) Reshape_(len int) {
 
-	if col < 1 || row < 1 {
+	if len < 1 {
 		log.Fatalln("Bad dimensions")
 	}
 
-	m.col = col
-	m.row = row
-
-	d := make([][]float64, row)
-
-	for a := range d {
-		d[a] = make([]float64, col)
-	}
+	v.len = len
+	d := make([]float64, len)
 
 	for a := range d {
 
-		for b := range d[a] {
-
-			if a < m.row && b < m.col {
-				d[a][b] = m.data[a][b]
-			} else {
-				d[a][b] = 0.0
-			}
-
+		if a < v.len {
+			d[a] = v.data[a]
 		}
 
 	}
-	m.data = d
-	m.row = row
-	m.col = col
-}
-
-// Returns the transpose of the Vector
-func (m *Vector) Transpose() *Vector {
-	mm := New(nil, m.col, m.row)
-
-	for a := range m.data {
-
-		for b := range m.data[0] {
-			mm.data[b][a] = m.data[a][b]
-		}
-
-	}
-
-	return mm
-}
-
-// Transposes the Vector
-func (m *Vector) Transpose_() {
-	d := make([][]float64, m.col)
-
-	for a := range d {
-		d[a] = make([]float64, m.row)
-
-		for b := range d[0] {
-			d[a][b] = m.data[b][a]
-		}
-
-	}
-
-	m.data = d
-	temp := m.col
-	m.col = m.row
-	m.row = temp
+	v.data = d
+	v.len = len
 }
 
 // Sets the data name
-func (m *Vector) SetName(name string) { m.name = name }
+func (v *Vector) SetName(name string) { v.name = name }
 
 // Returns the data name
-func (m *Vector) Name() string { return m.name }
+func (v *Vector) Name() string { return v.name }
 
 // Returns the data UUID as a string
-func (m *Vector) ID() string { return m.id.String() }
+func (v *Vector) ID() string { return v.id.String() }
 
 // Returns the data data as a slice of float64
-func (m *Vector) Raw() [][]float64 { return m.data }
+func (v *Vector) Raw() []float64 { return v.data }
 
 // Returns the data dimensions as a slice of int
-func (m *Vector) Size() (col, row int) { return m.col, m.row }
+func (v *Vector) Size() (len int) { return v.len }
 
 // Returns the data length
-func (m *Vector) Len() int { return m.len }
+func (v *Vector) Len() int { return v.len }
