@@ -10,7 +10,17 @@ import (
 
 // Returns a Matrix with specified dimensions
 // any dimension < 1 is unacceptable
-func New(data [][]float64, row, col int) *Matrix {
+func New(data [][]float64, dimensions ...int) *Matrix {
+	var row, col int
+
+	if dimensions == nil {
+		row = len(data)
+		col = len(data[0])
+	} else if len(dimensions) == 2 {
+		row, col = dimensions[1], dimensions[0]
+	} else {
+		log.Fatalln("Bad dimensions")
+	}
 
 	if col < 1 || row < 1 {
 		log.Fatalln("Unacceptable dimensions")
