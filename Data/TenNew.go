@@ -1,4 +1,4 @@
-package Tensor
+package Data
 
 import (
 	"log"
@@ -11,7 +11,7 @@ import (
 // Returns a Tensor with specified dimensions and data
 // Note: The excess data will be ignored and if insuffcient, will be set to'0'
 // and any dimension size < 1 is unacceptable
-func New(data []float64, dimensions ...int) *Tensor {
+func NewTensor(data []float64, dimensions ...int) *Tensor {
 	size := 1
 	dim := make([]int, len(dimensions))
 	dimc := make([]int, len(dimensions))
@@ -52,7 +52,7 @@ func New(data []float64, dimensions ...int) *Tensor {
 }
 
 // Returns a Tensor with specified dimensions and value of '0'
-func Zero(dimensions ...int) *Tensor {
+func ZeroTensor(dimensions ...int) *Tensor {
 	size := 1
 	dim := make([]int, len(dimensions))
 	dimc := make([]int, len(dimensions))
@@ -149,7 +149,7 @@ func (t *Tensor) Zero_(dimensions ...int) {
 }
 
 // Returns a Tensor with specified dimesnions and values of '1'
-func Ones(dimensions ...int) *Tensor {
+func OnesTensor(dimensions ...int) *Tensor {
 	size := 1
 	dim := make([]int, len(dimensions))
 	dimc := make([]int, len(dimensions))
@@ -259,7 +259,7 @@ func (t *Tensor) Ones_(dimensions ...int) {
 
 // Returns a Tensor with specified dimensions and random values
 // TODO: Normal randomization, Mean = 0, SD = 1 --> DONE
-func Random(dimensions ...int) *Tensor {
+func RandomTensor(dimensions ...int) *Tensor {
 	size := 1
 	dim := make([]int, len(dimensions))
 	dimc := make([]int, len(dimensions))
@@ -378,29 +378,6 @@ func (t *Tensor) Random_(dimensions ...int) {
 	t.dim = dim
 	t.dimc = dimc
 	t.len = size
-}
-
-// Return a replicate of the provided Tensor
-func Clone(t *Tensor) *Tensor {
-	d := make([]float64, t.len)
-	dim := make([]int, t.dims)
-	dimc := make([]int, t.dims)
-	copy(dim, t.dim)
-	copy(dimc, t.dimc)
-
-	for a := range d {
-		d[a] = t.raw[a]
-	}
-
-	return &Tensor{
-		id:   uuid.New(),
-		name: t.name,
-		raw:  d,
-		dim:  dim,
-		dimc: dimc,
-		dims: t.dims,
-		len:  t.len,
-	}
 }
 
 // Return a replicate of the provided Tensor

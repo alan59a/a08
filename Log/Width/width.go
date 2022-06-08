@@ -4,7 +4,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
-	"syscall"
+	//"syscall"
 )
 
 // Condition have flag EastAsianWidth whether the current locale is CJK or not.
@@ -160,7 +160,7 @@ func (c *Condition) Truncate(s string, w int, tail string) string {
 func (c *Condition) Wrap(s string, w int) string {
 	width := 0
 	out := ""
-	for _, r := range []rune(s) {
+	for _, r := range s {
 		cw := c.RuneWidth(r)
 		if r == '\n' {
 			out += string(r)
@@ -248,6 +248,7 @@ func FillRight(s string, w int) string {
 	return DefaultCondition.FillRight(s, w)
 }
 
+/*
 // IsEastAsian return true if the current locale is CJK
 func IsEastAsian2() bool {
 	r1, _, _ := procGetConsoleOutputCP.Call()
@@ -262,7 +263,7 @@ func IsEastAsian2() bool {
 
 	return false
 }
-
+*/
 func isEastAsian(locale string) bool {
 	charset := strings.ToLower(locale)
 	r := reLoc.FindStringSubmatch(locale)
@@ -348,11 +349,12 @@ var (
 	}
 )
 
+/*
 var (
 	kernel32               = syscall.NewLazyDLL("kernel32")
 	procGetConsoleOutputCP = kernel32.NewProc("GetConsoleOutputCP")
 )
-
+*/
 var private = table{
 	{0x00E000, 0x00F8FF}, {0x0F0000, 0x0FFFFD}, {0x100000, 0x10FFFD},
 }

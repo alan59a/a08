@@ -1,4 +1,4 @@
-package Vector
+package Data
 
 import (
 	"math/rand"
@@ -10,21 +10,9 @@ import (
 // Returns a Vector with specified dimensions and data
 // Note: The excess data will be ignored and if insuffcient, will be set to'0'
 // and any dimension size < 1 is unacceptable
-func New(data []float64, length int) *Vector {
+func NewVector(data []float64, length int) *Vector {
 	d := make([]float64, length)
 	copy(d, data)
-
-	return &Vector{
-		id:   uuid.New(),
-		name: "",
-		data: d,
-		len:  length,
-	}
-}
-
-// Returns a Vector with specified dimensions and value of '0'
-func Zero(length int) *Vector {
-	d := make([]float64, length)
 
 	return &Vector{
 		id:   uuid.New(),
@@ -56,7 +44,7 @@ func (v *Vector) Zero_(length int) {
 }
 
 // Returns a Vector with specified dimesnions and values of '1'
-func Ones(length int) *Vector {
+func OnesVector(length int) *Vector {
 	d := make([]float64, length)
 
 	for a := range d {
@@ -102,7 +90,7 @@ func (v *Vector) Ones_(length int) {
 
 // Returns a Vector with specified dimensions and random values
 // TODO: Normal randomization, Mean = 0, SD = 1 --> DONE
-func Random(length int) *Vector {
+func RandomVector(length int) *Vector {
 	d := make([]float64, length)
 
 	rand.Seed(time.Now().UnixNano())
@@ -151,22 +139,6 @@ func (v *Vector) Random_(length int) {
 
 	v.data = d
 	v.len = length
-}
-
-// Return a replicate of the provided Vector
-func Clone(v *Vector) *Vector {
-	d := make([]float64, v.len)
-
-	for a := range d {
-		d[a] = v.data[a]
-	}
-
-	return &Vector{
-		id:   uuid.New(),
-		name: v.name,
-		data: d,
-		len:  v.len,
-	}
 }
 
 // Return a replicate of the provided Vector

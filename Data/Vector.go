@@ -1,4 +1,4 @@
-package Vector
+package Data
 
 import (
 	"log"
@@ -6,21 +6,6 @@ import (
 
 	"github.com/google/uuid"
 )
-
-// Universal Data Container as a Tensor
-type Vector struct {
-	id   uuid.UUID
-	name string
-	data []float64
-	len  int
-}
-
-// a universal location identifier
-// lower index, lower dimension
-// e.g. : index 0 -> x (columns), 1 -> y (rows), 2 -> z, ...
-type Loc struct {
-	Coord []int
-}
 
 // Vector methods with "_" at the end will output the results in-place
 

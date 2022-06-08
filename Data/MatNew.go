@@ -1,4 +1,4 @@
-package Matrix
+package Data
 
 import (
 	"log"
@@ -10,7 +10,7 @@ import (
 
 // Returns a Matrix with specified dimensions
 // any dimension < 1 is unacceptable
-func New(data [][]float64, dimensions ...int) *Matrix {
+func NewMatrix(data [][]float64, dimensions ...int) *Matrix {
 	var row, col int
 
 	if dimensions == nil {
@@ -33,24 +33,6 @@ func New(data [][]float64, dimensions ...int) *Matrix {
 	}
 
 	copy(d, data)
-
-	return &Matrix{
-		id:   uuid.New(),
-		name: "",
-		data: d,
-		len:  col * row,
-		col:  col,
-		row:  row,
-	}
-}
-
-// Returns a Matrix with specified dimensions and value of '0'
-func Zero(row, col int) *Matrix {
-	d := make([][]float64, row)
-
-	for a := range d {
-		d[a] = make([]float64, col)
-	}
 
 	return &Matrix{
 		id:   uuid.New(),
@@ -122,7 +104,7 @@ func (m *Matrix) Zero_(dimensions ...int) {
 }
 
 // Returns a Matrix with specified dimesnions and values of '1'
-func Ones(row, col int) *Matrix {
+func OnesMatrix(row, col int) *Matrix {
 
 	if col < 1 || row < 1 {
 		log.Fatalln("Bad dimensions")
@@ -216,7 +198,7 @@ func (m *Matrix) Ones_(dimensions ...int) {
 
 // Returns a Matrix with specified dimensions and random values
 // TODO: Normal randomization, Mean = 0, SD = 1 --> DONE
-func Random(row, col int) *Matrix {
+func RandomMatrix(row, col int) *Matrix {
 
 	if col < 1 || row < 1 {
 		log.Fatalln("Bad dimensions")
@@ -308,29 +290,6 @@ func (m *Matrix) Random_(dimensions ...int) {
 	m.col = dimensions[0]
 	m.row = dimensions[1]
 	m.data = d
-}
-
-// Return a replicate of the provided Matrix
-func Clone(m *Matrix) *Matrix {
-	d := make([][]float64, m.row)
-
-	for a := range d {
-		d[a] = make([]float64, m.col)
-
-		for b := range d[0] {
-			d[a][b] = m.data[a][b]
-		}
-
-	}
-
-	return &Matrix{
-		id:   uuid.New(),
-		name: m.name,
-		data: d,
-		len:  m.len,
-		col:  m.col,
-		row:  m.row,
-	}
 }
 
 // Return a replicate of the provided Matrix

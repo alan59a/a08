@@ -1,30 +1,10 @@
 // a pure Go data processing package
-package Tensor
+package Data
 
 import (
 	"log"
 	"math"
-
-	"github.com/google/uuid"
 )
-
-// Universal Data Container as a Tensor
-type Tensor struct {
-	id   uuid.UUID
-	name string
-	raw  []float64
-	dim  []int
-	dimc []int
-	dims int
-	len  int
-}
-
-// a universal location identifier
-// lower index, lower dimension
-// e.g. : index 0 -> x (columns), 1 -> y (rows), 2 -> z, ...
-type Loc struct {
-	Coord []int
-}
 
 // Tensor methods with "_" at the end will output the results in-place
 
@@ -92,7 +72,7 @@ func (t *Tensor) Get(location ...int) float64 {
 // # No matter how many variables the first one will be treated as input value and the rest as function parameters
 // # I was even nice enough to accept an error output for your function .... where else have you seen that?
 func Apply(t *Tensor, f func(...float64) (float64, error), vars ...float64) *Tensor {
-	dd := New(nil, t.dim...)
+	dd := NewTensor(nil, t.dim...)
 	v := make([]float64, len(vars)+1)
 
 	for a := range vars {
@@ -115,7 +95,7 @@ func Apply(t *Tensor, f func(...float64) (float64, error), vars ...float64) *Ten
 // # No matter how many variables the first one will be treated as input value and the rest as function parameters
 // # I was even nice enough to accept an error output for your function .... where else have you seen that?
 func (t *Tensor) Apply(f func(...float64) (float64, error), vars ...float64) *Tensor {
-	dd := New(nil, t.dim...)
+	dd := NewTensor(nil, t.dim...)
 	v := make([]float64, len(vars)+1)
 
 	for a := range vars {
@@ -177,7 +157,7 @@ func (t *Tensor) Sum() *Tensor {
 
 	}
 
-	dd := New(nil, dim...)
+	dd := NewTensor(nil, dim...)
 
 	for a := 0; a < t.dim[0]; a++ {
 
@@ -216,7 +196,7 @@ func (t *Tensor) Cut() []*Tensor {
 
 	for a := 0; a < t.dim[t.dims-1]; a++ {
 
-		dd := New(nil, dim...)
+		dd := NewTensor(nil, dim...)
 
 		for b := range dd.raw {
 			dd.raw[b] = t.raw[a*t.dimc[t.dims-1]+b]

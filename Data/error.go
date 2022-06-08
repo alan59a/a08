@@ -1,4 +1,4 @@
-package Vector
+package Data
 
 const (
 	ETD01 = "Tensor Dimension ERROR: Dimension values are required. Please provide an acceptable dimension value"

@@ -2,12 +2,9 @@ package Data
 
 import (
 	"log"
-
-	"github.com/alan59a/a08/Data/Matrix"
-	"github.com/alan59a/a08/Data/Tensor"
-	"github.com/alan59a/a08/Data/Vector"
 )
 
+/*
 type Datas interface {
 	Set(float64, ...int)
 	Get(...int)
@@ -17,10 +14,10 @@ type Datas interface {
 	SumR() float64
 	Cut() []*Datas
 	Min() float64
-	MinLoc() (float64, *Tensor.Loc)
+	MinLoc() (float64, *Loc)
 	ArgMin() int
 	Max() float64
-	MaxLoc() (float64, *Tensor.Loc)
+	MaxLoc() (float64, *Loc)
 	ArgMax() int
 	SoftMax()
 	Mean()
@@ -33,8 +30,15 @@ type Datas interface {
 	Size() []int
 	Len() int
 }
+*/
+type Datas interface {
+	SetName(string)
+	Name() string
+	ID() string
+	Raw() []float64
+}
 
-func Tensor2Matrix(t *Tensor.Tensor) *Matrix.Matrix {
+func (t *Tensor) Matrix() *Matrix {
 
 	if t.Dims() != 2 {
 		log.Fatalln("Unacceptable dimensions")
@@ -55,10 +59,10 @@ func Tensor2Matrix(t *Tensor.Tensor) *Matrix.Matrix {
 
 	}
 
-	return Matrix.New(d, dim[1], dim[0])
+	return NewMatrix(d, dim[1], dim[0])
 }
 
-func Tensor2Vector(t *Tensor.Tensor) *Vector.Vector {
+func (t *Tensor) Vector() *Vector {
 
 	if t.Dims() != 1 {
 		log.Fatalln("Unacceptable dimensions")
@@ -67,17 +71,17 @@ func Tensor2Vector(t *Tensor.Tensor) *Vector.Vector {
 	raw := make([]float64, t.Len())
 	copy(raw, t.Raw())
 
-	return Vector.New(raw, t.Len())
+	return NewVector(raw, t.Len())
 }
 
-func Matrix2Tensor(m *Matrix.Matrix) *Tensor.Tensor {
+func (m *Matrix) Tensor() *Tensor {
 	a, b := m.Size()
 	raw := m.Raw()
 
-	return Tensor.New(raw, a, b)
+	return NewTensor(raw, a, b)
 }
 
-func Matrix2Vector(m *Matrix.Matrix) *Vector.Vector {
+func (m *Matrix) Vector() *Vector {
 	a, b := m.Size()
 
 	if a != 1 && b != 1 {
@@ -86,13 +90,13 @@ func Matrix2Vector(m *Matrix.Matrix) *Vector.Vector {
 
 	raw := m.Raw()
 
-	return Vector.New(raw, a*b)
+	return NewVector(raw, a*b)
 }
 
-func Vector2Tensro(v *Vector.Vector) *Tensor.Tensor { return Tensor.New(v.Raw(), v.Len()) }
+func (v *Vector) Tensro() *Tensor { return NewTensor(v.Raw(), v.Len()) }
 
-func Vector2Matrix(v *Vector.Vector) *Matrix.Matrix {
-	return Matrix.New([][]float64{v.Raw()}, 1, v.Len())
+func (v *Vector) Matrix() *Matrix {
+	return NewMatrix([][]float64{v.Raw()}, 1, v.Len())
 }
 
 func Save(d *Datas) {

@@ -1,14 +1,4 @@
-package Tensor
-
-type Dataset struct {
-	Data     []*Tensor
-	Lable    []int
-	size     int
-	root     string
-	train    bool
-	download bool
-	link     string
-}
+package Data
 
 // Returens the size of the Dataset
 func (d *Dataset) Size() int { return d.size }

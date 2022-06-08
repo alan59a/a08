@@ -1,5 +1,5 @@
 // a pure Go data processing package
-package Matrix
+package Data
 
 import (
 	"log"
@@ -8,29 +8,18 @@ import (
 	"github.com/google/uuid"
 )
 
-// 2D Data Container as a Matrix
-type Matrix struct {
-	id   uuid.UUID
-	name string
-	data [][]float64
-	len  int
-	col  int
-	row  int
-}
-
-// a universal location identifier
-// lower index, lower dimension
-// e.g. : index 0 -> x (columns), 1 -> y (rows), 2 -> z, ...
-type Loc struct {
-	Coord []int
-}
-
 // Matrix methods with "_" at the end will output the results in-place
 
 // Sets an individual element of the Matrix.
 // For user convenience, similar to python, negative location is also acceptable
 // Hold your horses. I know your proud Go-Vein is popping ... it's just for noobs ... you should NOT use it.
-func (m *Matrix) Set(data float64, col, row int) {
+func (m *Matrix) Set(data float64, dimension ...int) {
+
+	if len(dimension) != 2 {
+		log.Fatalln("Bad dimensions")
+	}
+
+	row, col := dimension[1], dimension[0]
 
 	if col < 0 {
 		col = m.col + col
@@ -50,7 +39,13 @@ func (m *Matrix) Set(data float64, col, row int) {
 // Returns an individual element of the Matrix
 // For user convenience, similar to python, negative location is also acceptable
 // Hold your horses. I know your proud Go-Vein is popping ... it's just for noobs ... you should NOT use it.
-func (m *Matrix) Get(col, row int) float64 {
+func (m *Matrix) Get(dimension ...int) float64 {
+
+	if len(dimension) != 2 {
+		log.Fatalln("Bad dimensions")
+	}
+
+	row, col := dimension[1], dimension[0]
 
 	if col < 0 {
 		col = m.col + col
@@ -377,7 +372,7 @@ func (m *Matrix) Reshape_(col, row int) {
 
 // Returns the transpose of the Matrix
 func (m *Matrix) Transpose() *Matrix {
-	mm := New(nil, m.col, m.row)
+	mm := NewMatrix(nil, m.col, m.row)
 
 	for a := range m.data {
 
