@@ -30,7 +30,6 @@ func (v1 *Vector) Add_(v2 *Vector) {
 	for a := range v1.data {
 		v1.data[a] += v2.data[a]
 	}
-
 }
 
 // Returns subtraction of 2 compatible Vectors
@@ -59,7 +58,6 @@ func (v1 *Vector) Subtract_(v2 *Vector) {
 	for a := range v1.data {
 		v1.data[a] -= v2.data[a]
 	}
-
 }
 
 // Returns the element-wise multiplication of 2 compatible Vectors
@@ -88,7 +86,6 @@ func (v1 *Vector) Multiply_(v2 *Vector) {
 	for a := range v1.data {
 		v1.data[a] *= v2.data[a]
 	}
-
 }
 
 // Returns the element-wise division of 2 compatible Vectors
@@ -126,7 +123,6 @@ func (v1 *Vector) Divide_(v2 *Vector) {
 			log.Fatalln("Bad value")
 		}
 	}
-
 }
 
 // Returns the dot product of 2 2-dimensional Vectors ... they are considered 1xn :D

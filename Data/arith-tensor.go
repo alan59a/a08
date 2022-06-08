@@ -46,7 +46,6 @@ func (t1 *Tensor) Add_(t2 *Tensor) {
 	for a := range t1.raw {
 		t1.raw[a] += t2.raw[a]
 	}
-
 }
 
 // Returns subtraction of 2 compatible Tensors
@@ -91,7 +90,6 @@ func (t1 *Tensor) Subtract_(t2 *Tensor) {
 	for a := range t1.raw {
 		t1.raw[a] -= t2.raw[a]
 	}
-
 }
 
 // Returns the element-wise multiplication of 2 compatible Tensors
@@ -136,7 +134,6 @@ func (t1 *Tensor) Multiply_(t2 *Tensor) {
 	for a := range t1.raw {
 		t1.raw[a] *= t2.raw[a]
 	}
-
 }
 
 // Returns the element-wise division of 2 compatible Tensors
@@ -193,7 +190,6 @@ func (t1 *Tensor) Divide_(t2 *Tensor) {
 			log.Fatalln("Bad value")
 		}
 	}
-
 }
 
 // Returns the dot product of 2 2-dimensional Tensors
@@ -234,7 +230,6 @@ func (t1 *Tensor) Dot(t2 *Tensor) *Tensor {
 	}
 
 	return t
-
 }
 
 // Returns the dot product of 2 compatible Tensors using the 1st tensor as the reciever

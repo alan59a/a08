@@ -9,6 +9,7 @@ func (m1 *Matrix) Add(m2 *Matrix) *Matrix {
 
 	if m1.col != m2.col || m1.row != m2.row {
 		log.Fatalln("Incompatible data")
+
 	}
 
 	m := NewMatrix(nil, m2.row, m1.col)
@@ -38,7 +39,6 @@ func (m1 *Matrix) Add_(m2 *Matrix) {
 		}
 
 	}
-
 }
 
 // Returns subtraction of 2 compatible Matrices
@@ -111,7 +111,6 @@ func (m1 *Matrix) Multiply_(m2 *Matrix) {
 		}
 
 	}
-
 }
 
 // Returns the element-wise division of 2 compatible Datas
@@ -153,7 +152,6 @@ func (m1 *Matrix) Divide_(m2 *Matrix) {
 		}
 
 	}
-
 }
 
 // Returns the dot product of 2 2-dimensional Matrices

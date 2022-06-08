@@ -39,11 +39,47 @@ type Tensor struct {
 }
 
 type Dataset struct {
-	Data     []*Datas
+	Data     []Datas
 	Lable    []int
 	size     int
 	root     string
 	train    bool
 	download bool
 	link     string
+}
+
+type Datas interface {
+	Set(float64, ...int)
+	Get(...int)
+	Apply(f func(...float64) (float64, error), vars ...float64) *Datas
+	Apply_(f func(...float64) (float64, error), vars ...float64)
+	Sum()
+	SumR() float64
+	Cut() []*Datas
+	Min() float64
+	MinLoc() (float64, *Loc)
+	ArgMin() int
+	Max() float64
+	MaxLoc() (float64, *Loc)
+	ArgMax() int
+	SoftMax()
+	Mean()
+	SD()
+	Reshape()
+	SetName(string)
+	Name() string
+	ID() string
+	Raw() []float64
+	Size() []int
+	Len() int
+
+	Add() Datas
+	Add_()
+	Subtract() Datas
+	Subtract_()
+	Multiply() Datas
+	Multiply_()
+	Divide() Datas
+	Divide_()
+	Dot() Datas
 }

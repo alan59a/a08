@@ -4,40 +4,6 @@ import (
 	"log"
 )
 
-/*
-type Datas interface {
-	Set(float64, ...int)
-	Get(...int)
-	Apply(f func(...float64) (float64, error), vars ...float64) *Datas
-	Apply_(f func(...float64) (float64, error), vars ...float64)
-	Sum()
-	SumR() float64
-	Cut() []*Datas
-	Min() float64
-	MinLoc() (float64, *Loc)
-	ArgMin() int
-	Max() float64
-	MaxLoc() (float64, *Loc)
-	ArgMax() int
-	SoftMax()
-	Mean()
-	SD()
-	Reshape()
-	SetName(string)
-	Name() string
-	ID() string
-	Raw() []float64
-	Size() []int
-	Len() int
-}
-*/
-type Datas interface {
-	SetName(string)
-	Name() string
-	ID() string
-	Raw() []float64
-}
-
 func (t *Tensor) Matrix() *Matrix {
 
 	if t.Dims() != 2 {
@@ -97,8 +63,4 @@ func (v *Vector) Tensro() *Tensor { return NewTensor(v.Raw(), v.Len()) }
 
 func (v *Vector) Matrix() *Matrix {
 	return NewMatrix([][]float64{v.Raw()}, 1, v.Len())
-}
-
-func Save(d *Datas) {
-
 }
